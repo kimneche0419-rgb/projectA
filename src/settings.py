@@ -1,0 +1,13 @@
+# Game settings
+WINDOW_WIDTH = 1280
+WINDOW_HEIGHT = 720
+FPS = 60
+TITLE = "Echoes of the Continuum"
+
+# Colors
+NEON_CYAN = (0, 255, 255)
+NEON_MAGENTA = (255, 0, 255)
+VOID_PURPLE = (75, 0, 130)
+DIM_GRAY = (50, 50, 50)
+PURE_WHITE = (255, 255, 255)
+PURE_BLACK = (0, 0, 0)
