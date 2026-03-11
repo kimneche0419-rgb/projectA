@@ -1,5 +1,6 @@
 import pygame
-from src.entities import Player
+import random
+from src.entities import Player, Enemy
 from src.dimension import DimensionManager
 from src.save_system import SaveSystem
 from src.ui import MinimalistHUD
@@ -79,10 +80,29 @@ class PrologueLevel(BaseLevelState):
         self.player.rect.y = 200
         self.echoes = self.save_system.get_echoes_for_chapter(self.chapter_name)
         print(f"Loaded {len(self.echoes)} echoes for prologue.")
+        
+        self.enemies = []
+        for _ in range(5):
+            ex = random.randint(300, WINDOW_WIDTH - 100)
+            ey = random.randint(100, WINDOW_HEIGHT - 100)
+            sx = random.choice([-200, 200])
+            sy = random.choice([-200, 200])
+            self.enemies.append(Enemy(ex, ey, sx, sy))
 
     def update(self, dt):
         super().update(dt)
         # Add tutorial logic here later
+        
+        # Enemy update and Player Collision Detection
+        for enemy in self.enemies:
+            enemy.update(dt)
+            # Only collide if in PHYSICAL dimension (game mechanic example)
+            # Or perhaps enemies exist in both? Let's say these particular drones are PHYSICAL
+            if self.dimension_manager.get_dimension().name == "PHYSICAL":
+                if self.player.rect.colliderect(enemy.rect):
+                    print("Player hit by enemy drone!")
+                    self.trigger_death("enemy_drone")
+                    break
         
     def draw(self, screen):
         # Draw parallax background first
@@ -99,3 +119,7 @@ class PrologueLevel(BaseLevelState):
             
         # Draw everything else
         super().draw(screen)
+        
+        # Draw enemies
+        for enemy in self.enemies:
+            enemy.draw(screen, self.camera)

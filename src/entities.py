@@ -87,3 +87,24 @@ class Player(Entity):
         if self.rect.right > WINDOW_WIDTH: self.rect.right = WINDOW_WIDTH
         if self.rect.top < 0: self.rect.top = 0
         if self.rect.bottom > WINDOW_HEIGHT: self.rect.bottom = WINDOW_HEIGHT
+
+class Enemy(Entity):
+    def __init__(self, x, y, speed_x, speed_y):
+        super().__init__(x, y, 48, 48, (255, 50, 50))
+        self.velocity.x = speed_x
+        self.velocity.y = speed_y
+        
+        try:
+            original_image = pygame.image.load("assets/enemy_drone.png").convert_alpha()
+            self.image = pygame.transform.scale(original_image, (48, 48))
+        except Exception as e:
+            print(f"Could not load enemy sprite: {e}")
+            self.image = None
+            
+    def update(self, dt):
+        super().update(dt)
+        # Simple bounce behavior
+        if self.rect.left < 0 or self.rect.right > WINDOW_WIDTH:
+            self.velocity.x *= -1
+        if self.rect.top < 0 or self.rect.bottom > WINDOW_HEIGHT:
+            self.velocity.y *= -1
